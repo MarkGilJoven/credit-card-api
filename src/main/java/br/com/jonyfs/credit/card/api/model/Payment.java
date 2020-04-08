@@ -1,5 +1,6 @@
 package br.com.jonyfs.credit.card.api.model;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.hash.Hashing;
 
 @Document(
                 collection = "payments")
@@ -48,7 +50,10 @@ public class Payment extends BaseDocument<String> {
     }
 
     public String getCardNumber() {
-        return cardNumber;
+        String        sha256hex = Hashing.sha256()
+        .hashString(cardNumber, StandardCharsets.UTF_8)
+        .toString();
+        return sha256hex;
     }
 
     public Date getExpirationDate() {
